@@ -39,4 +39,10 @@ public class CustomerController {
         headers.add("Location", "/api/v1/customers/" + addedCustomer.getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<String> updateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer){
+        customerService.updateCustomerById(id, customer);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
