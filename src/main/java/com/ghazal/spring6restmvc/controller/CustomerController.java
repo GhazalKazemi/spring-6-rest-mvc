@@ -5,10 +5,10 @@ import com.ghazal.spring6restmvc.service.CustomerService;
 import com.ghazal.spring6restmvc.service.CustomerServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,5 +29,14 @@ public class CustomerController {
     public Customer getCustomerById(@PathVariable UUID id){
         log.debug("Inside getCustomerById controller");
         return customerService.getCustomerById(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<String> addCustomer(@RequestBody Customer customer){
+        log.debug("Inside addCustomer controller");
+        Customer addedCustomer = customerService.addCustomer(customer);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/api/v1/customers/" + addedCustomer.getId().toString());
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 }
