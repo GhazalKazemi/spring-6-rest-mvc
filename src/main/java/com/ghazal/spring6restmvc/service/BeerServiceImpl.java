@@ -88,6 +88,7 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public void updateBeerById(UUID id, Beer beer) {
+        log.debug("Inside updateBeerById service");
         Beer existingBeer = beerMap.get(id);
         if (existingBeer != null){
             existingBeer.setBeerName(beer.getBeerName());
@@ -104,6 +105,7 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public void deleteBeerById(UUID id) {
+        log.debug("Inside deleteBeerById service");
         this.beerMap.remove(id);
     }
 }

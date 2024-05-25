@@ -42,6 +42,7 @@ public class CustomerController {
 
     @PutMapping("{id}")
     public ResponseEntity<String> updateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer){
+        log.debug("Inside updateCustomerById controller");
         customerService.updateCustomerById(id, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

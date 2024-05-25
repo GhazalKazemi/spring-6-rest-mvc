@@ -45,12 +45,14 @@ public class BeerController {
 
     @PutMapping("{id}")
     public ResponseEntity<String> updateBeerById(@PathVariable("id") UUID id, @RequestBody Beer beer){
+        log.debug("Inside updateBeerById controller");
         beerService.updateBeerById(id, beer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteBeerById(@PathVariable("id") UUID id){
+        log.debug("Inside deleteBeerById controller");
         beerService.deleteBeerById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
