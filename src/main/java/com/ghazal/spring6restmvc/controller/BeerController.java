@@ -56,4 +56,10 @@ public class BeerController {
         beerService.deleteBeerById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @PatchMapping("{id}")
+    public ResponseEntity<String> partialUpdateBeerById(@PathVariable("id") UUID id, @RequestBody Beer beer){
+        log.debug("Inside partialUpdateBeerById controller");
+        beerService.partialUpdateBeerById(id, beer);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

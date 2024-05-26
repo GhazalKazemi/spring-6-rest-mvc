@@ -4,6 +4,7 @@ import com.ghazal.spring6restmvc.model.Beer;
 import com.ghazal.spring6restmvc.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -87,7 +88,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void updateBeerById(UUID id, Beer beer) {
+    public void updateBeerById(UUID id, Beer beer) { //replace the entire beer object with new object
         log.debug("Inside updateBeerById service");
         Beer existingBeer = beerMap.get(id);
         if (existingBeer != null){
@@ -107,5 +108,32 @@ public class BeerServiceImpl implements BeerService {
     public void deleteBeerById(UUID id) {
         log.debug("Inside deleteBeerById service");
         this.beerMap.remove(id);
+    }
+
+    @Override
+    public void partialUpdateBeerById(UUID id, Beer beer) { // patch some beer properties on an existing beer
+        log.debug("Inside partialUpdateBeerById service");
+        Beer existingBeer = beerMap.get(id);
+        if (existingBeer != null){
+            if(StringUtils.hasText(beer.getBeerName())){
+                existingBeer.setBeerName(beer.getBeerName());
+            }
+            if (beer.getBeerStyle() != null){
+                existingBeer.setBeerStyle(beer.getBeerStyle());
+            }
+            if (beer.getQuantityOnHand() != null){
+                existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
+            }
+            if (beer.getPrice() != null){
+                existingBeer.setPrice(beer.getPrice());
+            }
+            if(StringUtils.hasText(beer.getUpc())){
+                existingBeer.setUpc(beer.getUpc());
+            }
+            if (beer.getVersion() != null){
+                existingBeer.setVersion(beer.getVersion());
+            }
+            existingBeer.setUpdateDate(LocalDateTime.now());
+        }
     }
 }
