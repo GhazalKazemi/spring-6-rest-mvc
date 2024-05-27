@@ -3,6 +3,7 @@ package com.ghazal.spring6restmvc.service;
 import com.ghazal.spring6restmvc.model.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -88,6 +89,21 @@ public class CustomerServiceImpl implements CustomerService {
     public void deleteCustomerById(UUID id) {
         log.debug("Inside deleteCustomerById service");
         this.customerMap.remove(id);
+    }
+
+    @Override
+    public void partialUpdateCustomerById(UUID id, Customer customer) {
+        log.debug("Inside partialUpdateCustomerById service");
+        Customer existingCustomer = customerMap.get(id);
+        if (existingCustomer != null){
+            if (StringUtils.hasText(customer.getCustomerName())){
+                existingCustomer.setCustomerName(customer.getCustomerName());
+            }
+            if (customer.getVersion() != null){
+                existingCustomer.setVersion(customer.getVersion());
+            }
+            existingCustomer.setLastModifiedDate(LocalDateTime.now());
+        }
     }
 
 }

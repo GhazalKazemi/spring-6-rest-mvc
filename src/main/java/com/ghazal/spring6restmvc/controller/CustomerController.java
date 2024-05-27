@@ -52,4 +52,10 @@ public class CustomerController {
         customerService.deleteCustomerById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @PatchMapping("{id}")
+    public ResponseEntity<String> partialUpdateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer){
+        log.debug("Inside partialUpdateCustomerById controller");
+        customerService.partialUpdateCustomerById(id, customer);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
