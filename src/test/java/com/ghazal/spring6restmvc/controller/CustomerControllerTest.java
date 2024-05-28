@@ -54,7 +54,7 @@ class CustomerControllerTest {
     @Test
     void testGetCustomers() throws Exception {
         given(customerService.getCustomers()).willReturn(customerServiceImpl.getCustomers());
-        mockMvc.perform(get("/api/v1/customers")
+        mockMvc.perform(get(CustomerController.CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -67,7 +67,7 @@ class CustomerControllerTest {
         Customer testCustomer = customerServiceImpl.getCustomers().get(2);
         given(customerService.getCustomerById(testCustomer.getId())).willReturn(testCustomer);
 
-        mockMvc.perform(get("/api/v1/customers/" + testCustomer.getId())
+        mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -82,7 +82,7 @@ class CustomerControllerTest {
 
         given(customerService.addCustomer(any(Customer.class))).willReturn(customerServiceImpl.getCustomers().get(1));
 
-        mockMvc.perform(post("/api/v1/customers")
+        mockMvc.perform(post(CustomerController.CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -94,7 +94,7 @@ class CustomerControllerTest {
     void testUpdateCustomerById() throws Exception {
         Customer customer = customerServiceImpl.getCustomers().get(1);
 
-        mockMvc.perform(put("/api/v1/customers/" + customer.getId())
+        mockMvc.perform(put(CustomerController.CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -105,7 +105,7 @@ class CustomerControllerTest {
     void testDeleteCustomerById() throws Exception {
         Customer customer = customerServiceImpl.getCustomers().get(1);
 
-        mockMvc.perform(delete("/api/v1/customers/" + customer.getId())
+        mockMvc.perform(delete(CustomerController.CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -121,7 +121,7 @@ class CustomerControllerTest {
 
         nameMap.put("customerName", "Patched Name");
 
-        mockMvc.perform(patch("/api/v1/customers/" + customer.getId())
+        mockMvc.perform(patch(CustomerController.CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(nameMap)))

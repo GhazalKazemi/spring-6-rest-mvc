@@ -15,22 +15,27 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/customers")
 public class CustomerController {
 
+    public static final String CUSTOMER_PATH = "/api/v1/customers";
+    public static final String CUSTOMER_PATH_ID = CUSTOMER_PATH + "/{id}";
+
     private final CustomerService customerService;
-    @RequestMapping(method = RequestMethod.GET)
+
+
+
+    @GetMapping(CUSTOMER_PATH)
     public List<Customer> getCustomers(){
         log.debug("Inside getCustomers controller");
         return customerService.getCustomers();
     }
-    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    @GetMapping(CUSTOMER_PATH_ID)
     public Customer getCustomerById(@PathVariable UUID id){
         log.debug("Inside getCustomerById controller");
         return customerService.getCustomerById(id);
     }
 
-    @PostMapping
+    @PostMapping(CUSTOMER_PATH)
     public ResponseEntity<String> addCustomer(@RequestBody Customer customer){
         log.debug("Inside addCustomer controller");
         Customer addedCustomer = customerService.addCustomer(customer);
@@ -39,19 +44,19 @@ public class CustomerController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @PutMapping("{id}")
+    @PutMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<String> updateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer){
         log.debug("Inside updateCustomerById controller");
         customerService.updateCustomerById(id, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @DeleteMapping("{id}")
+    @DeleteMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<String> deleteCustomerById(@PathVariable("id")UUID id){
         log.debug("Inside deleteCustomerById controller");
         customerService.deleteCustomerById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @PatchMapping("{id}")
+    @PatchMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<String> partialUpdateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer){
         log.debug("Inside partialUpdateCustomerById controller");
         customerService.partialUpdateCustomerById(id, customer);
