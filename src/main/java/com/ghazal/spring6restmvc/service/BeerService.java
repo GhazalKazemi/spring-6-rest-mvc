@@ -1,21 +1,21 @@
 package com.ghazal.spring6restmvc.service;
 
-import com.ghazal.spring6restmvc.model.Beer;
+import com.ghazal.spring6restmvc.model.BeerDTO;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface BeerService {
-    List<Beer> listBeers();
+    List<BeerDTO> listBeers();
 
-    Optional<Beer> getBeerById(UUID id);
+    Optional<BeerDTO> getBeerById(UUID id);
 
-    Beer addBeer(Beer beer);
+    BeerDTO addBeer(BeerDTO beer);
 
-    void updateBeerById(UUID id, Beer beer);
+    void updateBeerById(UUID id, BeerDTO beer);
 
     void deleteBeerById(UUID id);
 
-    void partialUpdateBeerById(UUID id, Beer beer);
+    void partialUpdateBeerById(UUID id, BeerDTO beer);
 }

@@ -1,9 +1,7 @@
 package com.ghazal.spring6restmvc.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ghazal.spring6restmvc.model.Beer;
-import com.ghazal.spring6restmvc.model.Customer;
+import com.ghazal.spring6restmvc.model.CustomerDTO;
 import com.ghazal.spring6restmvc.service.CustomerService;
 import com.ghazal.spring6restmvc.service.CustomerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +43,7 @@ class CustomerControllerTest {
     ArgumentCaptor<UUID> uuidArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<Customer> customerArgumentCaptor;
+    ArgumentCaptor<CustomerDTO> customerArgumentCaptor;
 
     @BeforeEach
     void setUp() {
@@ -65,7 +63,7 @@ class CustomerControllerTest {
 
     @Test
     void testGetCustomerById() throws Exception {
-        Customer testCustomer = customerServiceImpl.getCustomers().get(2);
+        CustomerDTO testCustomer = customerServiceImpl.getCustomers().get(2);
         given(customerService.getCustomerById(testCustomer.getId())).willReturn(Optional.of(testCustomer));
 
         mockMvc.perform(get(CustomerController.CUSTOMER_PATH_ID, testCustomer.getId())
@@ -77,11 +75,11 @@ class CustomerControllerTest {
     }
     @Test
     void testAddCustomer() throws Exception {
-        Customer customer = customerServiceImpl.getCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getCustomers().get(0);
         customer.setVersion(null);
         customer.setId(null);
 
-        given(customerService.addCustomer(any(Customer.class))).willReturn(customerServiceImpl.getCustomers().get(1));
+        given(customerService.addCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.getCustomers().get(1));
 
         mockMvc.perform(post(CustomerController.CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
@@ -93,18 +91,18 @@ class CustomerControllerTest {
 
     @Test
     void testUpdateCustomerById() throws Exception {
-        Customer customer = customerServiceImpl.getCustomers().get(1);
+        CustomerDTO customer = customerServiceImpl.getCustomers().get(1);
 
         mockMvc.perform(put(CustomerController.CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isNoContent());
-        verify(customerService).updateCustomerById(any(UUID.class), any(Customer.class));
+        verify(customerService).updateCustomerById(any(UUID.class), any(CustomerDTO.class));
     }
     @Test
     void testDeleteCustomerById() throws Exception {
-        Customer customer = customerServiceImpl.getCustomers().get(1);
+        CustomerDTO customer = customerServiceImpl.getCustomers().get(1);
 
         mockMvc.perform(delete(CustomerController.CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON))
@@ -117,7 +115,7 @@ class CustomerControllerTest {
 
     @Test
     void testPartialUpdateById() throws Exception {
-        Customer customer = customerServiceImpl.getCustomers().get(1);
+        CustomerDTO customer = customerServiceImpl.getCustomers().get(1);
         Map<String, Object> nameMap = new HashMap<>();
 
         nameMap.put("customerName", "Patched Name");

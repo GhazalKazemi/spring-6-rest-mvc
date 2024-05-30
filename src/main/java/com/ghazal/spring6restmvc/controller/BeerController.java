@@ -1,7 +1,7 @@
 package com.ghazal.spring6restmvc.controller;
 
 
-import com.ghazal.spring6restmvc.model.Beer;
+import com.ghazal.spring6restmvc.model.BeerDTO;
 import com.ghazal.spring6restmvc.service.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,20 +24,20 @@ public class BeerController {
     private final BeerService beerService;
 
     @GetMapping(BEER_PATH)
-    public List<Beer> listBeers(){
+    public List<BeerDTO> listBeers(){
         log.debug("Inside listBeers controller");
         return beerService.listBeers();
     }
     @GetMapping(BEER_PATH_ID)
-    public Beer getBeerById(@PathVariable("id") UUID id){
+    public BeerDTO getBeerById(@PathVariable("id") UUID id){
         log.debug("Inside getBeerById controller, Beer Id: {}", id.toString());
         return beerService.getBeerById(id).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(BEER_PATH)
-    public ResponseEntity<String> addBeer(@RequestBody Beer beer){
+    public ResponseEntity<String> addBeer(@RequestBody BeerDTO beer){
         log.debug("Inside addBeer controller");
-        Beer addedBeer = beerService.addBeer(beer);
+        BeerDTO addedBeer = beerService.addBeer(beer);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/api/v1/beer/" + addedBeer.getId().toString());
 
@@ -45,7 +45,7 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity<String> updateBeerById(@PathVariable("id") UUID id, @RequestBody Beer beer){
+    public ResponseEntity<String> updateBeerById(@PathVariable("id") UUID id, @RequestBody BeerDTO beer){
         log.debug("Inside updateBeerById controller");
         beerService.updateBeerById(id, beer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -58,7 +58,7 @@ public class BeerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PatchMapping(BEER_PATH_ID)
-    public ResponseEntity<String> partialUpdateBeerById(@PathVariable("id") UUID id, @RequestBody Beer beer){
+    public ResponseEntity<String> partialUpdateBeerById(@PathVariable("id") UUID id, @RequestBody BeerDTO beer){
         log.debug("Inside partialUpdateBeerById controller");
         beerService.partialUpdateBeerById(id, beer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

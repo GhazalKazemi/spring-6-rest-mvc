@@ -1,6 +1,6 @@
 package com.ghazal.spring6restmvc.controller;
 
-import com.ghazal.spring6restmvc.model.Customer;
+import com.ghazal.spring6restmvc.model.CustomerDTO;
 import com.ghazal.spring6restmvc.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,27 +25,27 @@ public class CustomerController {
 
 
     @GetMapping(CUSTOMER_PATH)
-    public List<Customer> getCustomers(){
+    public List<CustomerDTO> getCustomers(){
         log.debug("Inside getCustomers controller");
         return customerService.getCustomers();
     }
     @GetMapping(CUSTOMER_PATH_ID)
-    public Customer getCustomerById(@PathVariable UUID id){
+    public CustomerDTO getCustomerById(@PathVariable UUID id){
         log.debug("Inside getCustomerById controller");
         return customerService.getCustomerById(id).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(CUSTOMER_PATH)
-    public ResponseEntity<String> addCustomer(@RequestBody Customer customer){
+    public ResponseEntity<String> addCustomer(@RequestBody CustomerDTO customer){
         log.debug("Inside addCustomer controller");
-        Customer addedCustomer = customerService.addCustomer(customer);
+        CustomerDTO addedCustomer = customerService.addCustomer(customer);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/api/v1/customers/" + addedCustomer.getId().toString());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @PutMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<String> updateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer){
+    public ResponseEntity<String> updateCustomerById(@PathVariable("id") UUID id, @RequestBody CustomerDTO customer){
         log.debug("Inside updateCustomerById controller");
         customerService.updateCustomerById(id, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -57,7 +57,7 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PatchMapping(CUSTOMER_PATH_ID)
-    public ResponseEntity<String> partialUpdateCustomerById(@PathVariable("id") UUID id, @RequestBody Customer customer){
+    public ResponseEntity<String> partialUpdateCustomerById(@PathVariable("id") UUID id, @RequestBody CustomerDTO customer){
         log.debug("Inside partialUpdateCustomerById controller");
         customerService.partialUpdateCustomerById(id, customer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
