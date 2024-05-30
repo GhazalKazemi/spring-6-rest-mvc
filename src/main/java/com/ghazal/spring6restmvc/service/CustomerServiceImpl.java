@@ -53,9 +53,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerById(UUID id) {
+    public Optional<Customer> getCustomerById(UUID id) {
         log.debug("Inside getCustomerById service, customerId: {}", id);
-        return customerMap.get(id);
+        return Optional.ofNullable(customerMap.get(id));
     }
 
     @Override
