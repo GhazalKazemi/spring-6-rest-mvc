@@ -65,7 +65,6 @@ public class CustomerServiceImpl implements CustomerService {
                 .id(UUID.randomUUID())
                 .createdDate(LocalDateTime.now())
                 .lastModifiedDate(LocalDateTime.now())
-                .version(customer.getVersion())
                 .customerName(customer.getCustomerName())
                 .build();
         customerMap.put(UUID.randomUUID(), addedCustomer);
@@ -78,7 +77,6 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerDTO existingCustomer = customerMap.get(id);
         if (existingCustomer != null){
             existingCustomer.setCustomerName(customer.getCustomerName());
-            existingCustomer.setVersion(existingCustomer.getVersion() + 1);
             existingCustomer.setLastModifiedDate(LocalDateTime.now());
 
             customerMap.put(existingCustomer.getId(), existingCustomer);
@@ -98,9 +96,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (existingCustomer != null){
             if (StringUtils.hasText(customer.getCustomerName())){
                 existingCustomer.setCustomerName(customer.getCustomerName());
-            }
-            if (customer.getVersion() != null){
-                existingCustomer.setVersion(customer.getVersion());
             }
             existingCustomer.setLastModifiedDate(LocalDateTime.now());
         }

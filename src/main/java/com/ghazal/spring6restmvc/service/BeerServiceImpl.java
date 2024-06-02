@@ -76,7 +76,6 @@ public class BeerServiceImpl implements BeerService {
                 .id(UUID.randomUUID())
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
-                .version(beer.getVersion())
                 .beerName(beer.getBeerName())
                 .beerStyle(beer.getBeerStyle())
                 .upc(beer.getUpc())
@@ -95,7 +94,6 @@ public class BeerServiceImpl implements BeerService {
             existingBeer.setBeerName(beer.getBeerName());
             existingBeer.setBeerStyle(beer.getBeerStyle());
             existingBeer.setUpdateDate(LocalDateTime.now());
-            existingBeer.setVersion(existingBeer.getVersion() + 1);
             existingBeer.setPrice(beer.getPrice());
             existingBeer.setUpc(beer.getUpc());
             existingBeer.setQuantityOnHand(beer.getQuantityOnHand());
@@ -129,9 +127,6 @@ public class BeerServiceImpl implements BeerService {
             }
             if(StringUtils.hasText(beer.getUpc())){
                 existingBeer.setUpc(beer.getUpc());
-            }
-            if (beer.getVersion() != null){
-                existingBeer.setVersion(beer.getVersion());
             }
             existingBeer.setUpdateDate(LocalDateTime.now());
         }
