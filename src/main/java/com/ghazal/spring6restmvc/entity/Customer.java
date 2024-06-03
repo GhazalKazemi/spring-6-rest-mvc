@@ -14,8 +14,7 @@ import java.util.UUID;
 @Entity
 public class Customer {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
     private UUID id;
     private String customerName;
