@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
@@ -48,5 +50,23 @@ class CustomerControllerIntegrationTest {
         assertThrows(NotFoundException.class, () -> {
             customerController.getCustomerById(UUID.randomUUID());
         });
+    }
+    @Rollback
+    @Transactional
+    @Test
+    void testAddCustomer(){
+        CustomerDTO customerDTO = CustomerDTO.builder()
+                .customerName("New Test Customer")
+                .build();
+        ResponseEntity<String> responseEntity = customerController.addCustomer(customerDTO);
+
+        assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+
+        String[] addCustomerPath = responseEntity.getHeaders().getLocation().getPath().split("/");
+        UUID uuidFromHeader = UUID.fromString(addCustomerPath[4]);
+
+        Customer customer = customerRepository.findById(uuidFromHeader).get();
+        assertThat(customer).isNotNull();
     }
 }
