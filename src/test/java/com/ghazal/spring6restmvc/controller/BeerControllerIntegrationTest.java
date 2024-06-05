@@ -1,6 +1,7 @@
 package com.ghazal.spring6restmvc.controller;
 
 import com.ghazal.spring6restmvc.entity.Beer;
+import com.ghazal.spring6restmvc.mapper.BeerMapper;
 import com.ghazal.spring6restmvc.model.BeerDTO;
 import com.ghazal.spring6restmvc.repository.BeerRepository;
 import jakarta.transaction.Transactional;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 
@@ -21,10 +23,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class BeerControllerIntegrationTest {
+    public static final String UPDATED_BEER_NAME = "Updated Beer Name";
+    public static final String NEW_TEST_BEER = "New Test Beer";
     @Autowired
     BeerController beerController;
     @Autowired
     BeerRepository beerRepository;
+
+    @Autowired
+    BeerMapper beerMapper;
 
     @Test
     void testListBeers(){
@@ -58,7 +65,7 @@ class BeerControllerIntegrationTest {
     @Test
     void testAddBeer(){
         BeerDTO beerDTO = BeerDTO.builder()
-                .beerName("New Test Beer")
+                .beerName(NEW_TEST_BEER)
                 .build();
         ResponseEntity<String> responseEntity = beerController.addBeer(beerDTO);
 
@@ -70,6 +77,22 @@ class BeerControllerIntegrationTest {
 
         Beer beer = beerRepository.findById(uuidSegmentFromPath).get();
         assertThat(beer).isNotNull();
+    }
+
+    @Test
+    void testUpdateExistingBeer(){
+        Beer existingBeer = beerRepository.findAll().get(1);
+        BeerDTO beerDTO = beerMapper.beerToBeerDto(existingBeer);
+        beerDTO.setId(null);
+        beerDTO.setVersion(null);
+
+        beerDTO.setBeerName(UPDATED_BEER_NAME);
+
+        ResponseEntity<String> responseEntity = beerController.updateBeerById(existingBeer.getId(), beerDTO);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        Beer updatedBeer = beerRepository.findById(existingBeer.getId()).get();
+        assertThat(updatedBeer.getBeerName()).isEqualTo(UPDATED_BEER_NAME);
     }
 
 

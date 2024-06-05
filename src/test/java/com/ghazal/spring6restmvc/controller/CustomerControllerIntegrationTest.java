@@ -1,6 +1,8 @@
 package com.ghazal.spring6restmvc.controller;
 
 import com.ghazal.spring6restmvc.entity.Customer;
+import com.ghazal.spring6restmvc.mapper.BeerMapper;
+import com.ghazal.spring6restmvc.mapper.CustomerMapper;
 import com.ghazal.spring6restmvc.model.CustomerDTO;
 import com.ghazal.spring6restmvc.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -19,10 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class CustomerControllerIntegrationTest {
+    public static final String UPDATED_CUSTOMER_NAME = "Updated Customer Name";
     @Autowired
     CustomerController customerController;
     @Autowired
     CustomerRepository customerRepository;
+
+    @Autowired
+    CustomerMapper customerMapper;
 
     @Test
     void testListCustomers(){
@@ -68,5 +74,22 @@ class CustomerControllerIntegrationTest {
 
         Customer customer = customerRepository.findById(uuidFromHeader).get();
         assertThat(customer).isNotNull();
+    }
+
+    @Test
+    void updateExistingCustomer(){
+        Customer existingCustomer = customerRepository.findAll().get(2);
+        CustomerDTO customerDTO = customerMapper.customerToCustomerDto(existingCustomer);
+        customerDTO.setId(null);
+        customerDTO.setVersion(null);
+
+        customerDTO.setCustomerName(UPDATED_CUSTOMER_NAME);
+
+        ResponseEntity<String> responseEntity = customerController.updateCustomerById(existingCustomer.getId(), customerDTO);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        Customer updatedCustomer = customerRepository.findById(existingCustomer.getId()).get();
+        assertThat(updatedCustomer.getCustomerName()).isEqualTo(UPDATED_CUSTOMER_NAME);
     }
 }
