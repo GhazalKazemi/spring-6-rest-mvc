@@ -13,7 +13,7 @@ import java.util.*;
 public class CustomerServiceImpl implements CustomerService {
     private Map<UUID, CustomerDTO> customerMap;
 
-    public CustomerServiceImpl(){
+    public CustomerServiceImpl() {
         this.customerMap = new HashMap<>();
         CustomerDTO customer1 = CustomerDTO.builder()
                 .id(UUID.randomUUID())
@@ -72,15 +72,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomerById(UUID id, CustomerDTO customer) {
+    public Optional<CustomerDTO> updateCustomerById(UUID id, CustomerDTO customer) {
         log.debug("Inside updateCustomerById service");
         CustomerDTO existingCustomer = customerMap.get(id);
-        if (existingCustomer != null){
-            existingCustomer.setCustomerName(customer.getCustomerName());
-            existingCustomer.setLastModifiedDate(LocalDateTime.now());
+        existingCustomer.setCustomerName(customer.getCustomerName());
+        existingCustomer.setLastModifiedDate(LocalDateTime.now());
 
-            customerMap.put(existingCustomer.getId(), existingCustomer);
-        }
+        customerMap.put(existingCustomer.getId(), existingCustomer);
+
+        return Optional.of(existingCustomer);
     }
 
     @Override
@@ -93,8 +93,8 @@ public class CustomerServiceImpl implements CustomerService {
     public void partialUpdateCustomerById(UUID id, CustomerDTO customer) {
         log.debug("Inside partialUpdateCustomerById service");
         CustomerDTO existingCustomer = customerMap.get(id);
-        if (existingCustomer != null){
-            if (StringUtils.hasText(customer.getCustomerName())){
+        if (existingCustomer != null) {
+            if (StringUtils.hasText(customer.getCustomerName())) {
                 existingCustomer.setCustomerName(customer.getCustomerName());
             }
             existingCustomer.setLastModifiedDate(LocalDateTime.now());
