@@ -75,7 +75,8 @@ class CustomerControllerIntegrationTest {
         Customer customer = customerRepository.findById(uuidFromHeader).get();
         assertThat(customer).isNotNull();
     }
-
+    @Rollback
+    @Transactional
     @Test
     void updateExistingCustomer(){
         Customer existingCustomer = customerRepository.findAll().get(2);
@@ -97,5 +98,15 @@ class CustomerControllerIntegrationTest {
         assertThrows(NotFoundException.class, () -> {
             customerController.updateCustomerById(UUID.randomUUID(), CustomerDTO.builder().build());
         });
+    }
+    @Rollback
+    @Transactional
+    @Test
+    void testDeleteCustomerById(){
+        Customer customer = customerRepository.findAll().get(2);
+        ResponseEntity<String> responseEntity = customerController.deleteCustomerById(customer.getId());
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+        assertThat(customerRepository.findById(customer.getId())).isEmpty();
     }
 }
