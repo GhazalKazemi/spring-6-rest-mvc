@@ -109,4 +109,12 @@ class CustomerControllerIntegrationTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
         assertThat(customerRepository.findById(customer.getId())).isEmpty();
     }
+
+    @Test
+    void testDeleteCustomerByIdNotFound(){
+        assertThrows(NotFoundException.class, () -> {
+            customerController.deleteCustomerById(UUID.randomUUID());
+        });
+    }
+
 }
