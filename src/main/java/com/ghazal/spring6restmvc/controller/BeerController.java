@@ -56,7 +56,9 @@ public class BeerController {
     @DeleteMapping(BEER_PATH_ID)
     public ResponseEntity<String> deleteBeerById(@PathVariable("id") UUID id){
         log.debug("Inside deleteBeerById controller");
-        beerService.deleteBeerById(id);
+        if (!beerService.deleteBeerById(id)){
+            throw new NotFoundException();
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PatchMapping(BEER_PATH_ID)
