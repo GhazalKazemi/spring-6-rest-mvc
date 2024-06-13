@@ -153,6 +153,7 @@ class CustomerControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customerDTO)))
+                .andExpect(jsonPath("$.length()", is(2)))
                 .andExpect(status().isBadRequest());
     }
 }
