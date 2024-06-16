@@ -138,6 +138,8 @@ class BeerControllerIntegrationTest {
         });
     }
 
+    @Rollback
+    @Transactional
     @Test
     void testPartialUpdateById() throws Exception {
         Beer beer = beerRepository.findAll().get(1);
