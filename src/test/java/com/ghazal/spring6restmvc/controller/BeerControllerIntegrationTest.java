@@ -1,25 +1,32 @@
 package com.ghazal.spring6restmvc.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ghazal.spring6restmvc.entity.Beer;
 import com.ghazal.spring6restmvc.mapper.BeerMapper;
 import com.ghazal.spring6restmvc.model.BeerDTO;
 import com.ghazal.spring6restmvc.repository.BeerRepository;
 import jakarta.transaction.Transactional;
+import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 class BeerControllerIntegrationTest {
@@ -32,6 +39,19 @@ class BeerControllerIntegrationTest {
 
     @Autowired
     BeerMapper beerMapper;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    MockMvc mockMvc;
+
+    @Autowired
+    WebApplicationContext webApplicationContext;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
 
     @Test
     void testListBeers(){
@@ -117,6 +137,21 @@ class BeerControllerIntegrationTest {
             beerController.deleteBeerById(UUID.randomUUID());
         });
     }
+
+    @Test
+    void testPartialUpdateById() throws Exception {
+        Beer beer = beerRepository.findAll().get(1);
+
+        Map<String, Object> nameMap = new HashMap<>();
+        nameMap.put("beerName", "Patched Name 0987654321234567890 0987654321234567890 0987654321234567890 0987654321234567890 0987654321234567890");
+
+        mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(nameMap)))
+                .andExpect(status().isBadRequest());
+
+        }
 
 
 }

@@ -63,7 +63,7 @@ public class BeerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PatchMapping(BEER_PATH_ID)
-    public ResponseEntity<String> partialUpdateBeerById(@PathVariable("id") UUID id, @RequestBody BeerDTO beer){
+    public ResponseEntity<String> partialUpdateBeerById(@PathVariable("id") UUID id, @Validated @RequestBody BeerDTO beer){
         log.debug("Inside partialUpdateBeerById controller");
         beerService.partialUpdateBeerById(id, beer);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
