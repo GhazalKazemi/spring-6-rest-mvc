@@ -57,7 +57,7 @@ class BeerControllerIntegrationTest {
     @Test
     void testListBeers(){
         List<BeerDTO> beerDTOs = beerController.listBeers();
-        assertThat(beerDTOs.size()).isEqualTo(3);
+        assertThat(beerDTOs.size()).isEqualTo(2413);
     }
     @Rollback
     @Transactional
