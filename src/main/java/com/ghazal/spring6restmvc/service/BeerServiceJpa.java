@@ -1,13 +1,16 @@
 package com.ghazal.spring6restmvc.service;
 
+import com.ghazal.spring6restmvc.entity.Beer;
 import com.ghazal.spring6restmvc.mapper.BeerMapper;
 import com.ghazal.spring6restmvc.model.BeerDTO;
 import com.ghazal.spring6restmvc.repository.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,10 +27,20 @@ public class BeerServiceJpa implements BeerService {
     private final BeerMapper beerMapper;
     @Override
     public List<BeerDTO> listBeers(String beerName) {
-        return beerRepository.findAll()
+        List<Beer> beerList;
+        if(StringUtils.hasText(beerName)){
+            beerList = listBeerByName(beerName);
+        }else {
+            beerList = beerRepository.findAll();
+        }
+        return beerList
                 .stream()
                 .map(beerMapper::beerToBeerDto)
                 .collect(Collectors.toList());
+    }
+    //TODO Impl
+    private List<Beer> listBeerByName(String beerName) {
+        return new ArrayList<>();
     }
 
     @Override
