@@ -40,7 +40,7 @@ public class BeerServiceJpa implements BeerService {
     }
     //TODO Impl
     private List<Beer> listBeerByName(String beerName) {
-        return new ArrayList<>();
+        return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%");
     }
 
     @Override
