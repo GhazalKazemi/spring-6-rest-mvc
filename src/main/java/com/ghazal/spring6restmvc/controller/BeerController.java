@@ -2,6 +2,7 @@ package com.ghazal.spring6restmvc.controller;
 
 
 import com.ghazal.spring6restmvc.model.BeerDTO;
+import com.ghazal.spring6restmvc.model.BeerStyle;
 import com.ghazal.spring6restmvc.service.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +26,10 @@ public class BeerController {
     private final BeerService beerService;
 
     @GetMapping(BEER_PATH)
-    public List<BeerDTO> listBeers(@RequestParam(required = false) String beerName){
+    public List<BeerDTO> listBeers(@RequestParam(required = false) String beerName,
+                                   @RequestParam(required = false) BeerStyle beerStyle){
         log.debug("Inside listBeers controller");
-        return beerService.listBeers(beerName);
+        return beerService.listBeers(beerName, beerStyle);
     }
     @GetMapping(BEER_PATH_ID)
     public BeerDTO getBeerById(@PathVariable("id") UUID id){
