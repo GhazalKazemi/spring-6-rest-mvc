@@ -3,6 +3,7 @@ package com.ghazal.spring6restmvc.service;
 import com.ghazal.spring6restmvc.entity.Beer;
 import com.ghazal.spring6restmvc.mapper.BeerMapper;
 import com.ghazal.spring6restmvc.model.BeerDTO;
+import com.ghazal.spring6restmvc.model.BeerStyle;
 import com.ghazal.spring6restmvc.repository.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,11 +26,14 @@ public class BeerServiceJpa implements BeerService {
 
     private final BeerMapper beerMapper;
     @Override
-    public List<BeerDTO> listBeers(String beerName) {
+    public List<BeerDTO> listBeers(String beerName, BeerStyle beerStyle) {
         List<Beer> beerList;
-        if(StringUtils.hasText(beerName)){
+        if(StringUtils.hasText(beerName) && beerStyle == null){
             beerList = listBeerByName(beerName);
-        }else {
+        }else if(!StringUtils.hasText(beerName) && beerStyle != null){
+            beerList = listBeerByStyle(beerStyle);
+        }
+        else {
             beerList = beerRepository.findAll();
         }
         return beerList
@@ -38,6 +41,11 @@ public class BeerServiceJpa implements BeerService {
                 .map(beerMapper::beerToBeerDto)
                 .collect(Collectors.toList());
     }
+
+    private List<Beer> listBeerByStyle(BeerStyle beerStyle) {
+        return beerRepository.findAllByBeerStyle(beerStyle);
+    }
+
     //TODO Impl
     private List<Beer> listBeerByName(String beerName) {
         return beerRepository.findAllByBeerNameIsLikeIgnoreCase("%" + beerName + "%");
