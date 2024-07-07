@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ghazal.spring6restmvc.entity.Beer;
 import com.ghazal.spring6restmvc.mapper.BeerMapper;
 import com.ghazal.spring6restmvc.model.BeerDTO;
+import com.ghazal.spring6restmvc.model.BeerStyle;
 import com.ghazal.spring6restmvc.repository.BeerRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +59,7 @@ class BeerControllerIntegrationTest {
 
     @Test
     void testListBeers() {
-        List<BeerDTO> beerDTOs = beerController.listBeers(null);
+        List<BeerDTO> beerDTOs = beerController.listBeers(null,null);
         assertThat(beerDTOs.size()).isEqualTo(2413);
     }
 
@@ -67,7 +68,7 @@ class BeerControllerIntegrationTest {
     @Test
     void testEmptyBeerList() {
         beerRepository.deleteAll();
-        List<BeerDTO> beerDTOs = beerController.listBeers(null);
+        List<BeerDTO> beerDTOs = beerController.listBeers(null,null);
         assertThat(beerDTOs.size()).isEqualTo(0);
     }
 
@@ -171,6 +172,13 @@ class BeerControllerIntegrationTest {
                 .queryParam("beerName", "IPA"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(336)));
+    }
+    @Test
+    void testGetBeerByStyle() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerStyle", BeerStyle.IPA.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(547)));
     }
 
 }
